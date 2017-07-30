@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.IO;
 
-public class mainMenu : MonoBehaviour {
+public class mainMenuScript : MonoBehaviour {
 
 	public GUISkin skin;
 
