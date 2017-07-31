@@ -44,18 +44,14 @@ public class gameController : MonoBehaviour {
         jump = Input.GetButtonDown("Vertical");
 	}
 
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
 
         if (grounded && jump) {
 
             body.AddForce(new Vector2(0f, jumpForce));
         }
 
-        if (grounded) {
-
-            body.velocity = new Vector2(move * maxSpeed, body.velocity.y);
-        }
+        body.velocity = new Vector2(move * maxSpeed, body.velocity.y);
 
         animator.SetFloat("Speed", Mathf.Abs(move));
         animator.SetBool("Ground", grounded);
