@@ -17,7 +17,7 @@ public class enemyManScript : MonoBehaviour {
 		body = GetComponent<Rigidbody2D>();
 	}
 
-	void Update () {
+	void FixedUpdate() {
 
 		body.velocity = new Vector2 (speed * direction, body.velocity.y);
 		transform.localScale = new Vector3 (direction, 1, 1);
@@ -27,14 +27,16 @@ public class enemyManScript : MonoBehaviour {
 		if (Time.time >= timeCheck) {
 		
 			direction *= -1f;
-		
 			timeCheck += interval;
 		}
 	}
 
-	void OnCollisionEnter2D(Collision2D col){
+	void OnTriggerEnter2D(Collider2D col) {
+    
+		if (col.gameObject.tag == "Platform") {
 
-		if (col.gameObject.tag == "Wall")
-			direction *= -1f;
-	}
+            direction *= -1f;
+            timeCheck += interval;
+        }
+    }
 }
