@@ -95,7 +95,13 @@ public class gameController : MonoBehaviour {
 			Destroy(col.gameObject);
 		}
 
-		if (col.gameObject.name == "spawnPoint") {
+        if (col.gameObject.tag == "Life")
+        {
+            lifes++;
+            Destroy(col.gameObject);
+        }
+
+        if (col.gameObject.name == "spawnPoint") {
 			
 			temporary = col.gameObject.GetComponent<spawnPointScript>();
 
