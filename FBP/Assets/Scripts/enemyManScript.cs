@@ -11,7 +11,7 @@ public class enemyManScript : MonoBehaviour {
 	Animator animator;
 	Rigidbody2D body;
 	
-	void Start () {
+	void Start() {
 	
 		animator = GetComponent<Animator>();
 		body = GetComponent<Rigidbody2D>();

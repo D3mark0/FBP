@@ -5,22 +5,24 @@ public class gameController : MonoBehaviour {
 
 	public float maxSpeed = 10f;
 	public float jumpForce = 400f;
-	bool facingRight = true;
-	bool grounded = false;
+    public float moveForce = 365f;
+    [HideInInspector] bool facingRight = true;
+    [HideInInspector] bool grounded = false;
 	public Transform groundCheck;
 	public float groundRadius = 0.2f;
 	public LayerMask whatIsGround;
 
-	public float move;
-	public bool jump;
-	
-	public int coins = 0;
+    [HideInInspector] public float move;
+    [HideInInspector] public bool jump;
+
+    public int coins = 0;
 	public int lifes = 3;
 
 	public bool win = false;
     public bool loose = false;
 
 	public spawnPointScript spawnPoint;
+    public int spawnCorrection = 1;
 
 	Animator animator;
 	Rigidbody2D body;
@@ -30,7 +32,8 @@ public class gameController : MonoBehaviour {
 	void Start() {
 
 		spawn = spawnPoint.transform.position;
-		transform.position = spawn;
+        spawn.y += spawnCorrection;
+        transform.position = spawn;
 
 		animator = GetComponent<Animator>();
 		body = GetComponent<Rigidbody2D>();
@@ -39,27 +42,39 @@ public class gameController : MonoBehaviour {
 	void Update() {
 
         grounded = Physics2D.OverlapCircle(groundCheck.position, groundRadius, whatIsGround);
+        //grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
 
-        move = Input.GetAxis("Horizontal");
-        jump = Input.GetButtonDown("Vertical");
-	}
+        if (Input.GetButtonDown("Vertical") && grounded) {
+
+            jump = true;
+        }
+    }
 
     void FixedUpdate() {
 
-        if (grounded && jump) {
+        move = Input.GetAxis("Horizontal");
 
-            body.AddForce(new Vector2(0f, jumpForce));
-        }
-
-        body.velocity = new Vector2(move * maxSpeed, body.velocity.y);
-
-        animator.SetFloat("Speed", Mathf.Abs(move));
+        animator.SetFloat("Speed", Mathf.Abs(body.velocity.x));
         animator.SetBool("Ground", grounded);
+
+        if (move * body.velocity.x < maxSpeed)
+            body.AddForce(Vector2.right * move * moveForce);
+
+        if (Mathf.Abs(body.velocity.x) > maxSpeed)
+            body.velocity = new Vector2(Mathf.Sign(body.velocity.x) * maxSpeed, body.velocity.y);
+
+        //body.velocity = new Vector2(move * maxSpeed, body.velocity.y);
 
         if (move > 0 && !facingRight)
             Flip();
         else if (move < 0 && facingRight)
             Flip();
+
+        if (jump) {
+
+            body.AddForce(new Vector2(0f, jumpForce));
+            jump = false;
+        }
     }
 
     void Flip() {
@@ -91,13 +106,12 @@ public class gameController : MonoBehaviour {
 		}
 
 		if (col.gameObject.tag == "Coin") {
-			coins++;
+			coins += 1;
 			Destroy(col.gameObject);
 		}
 
-        if (col.gameObject.tag == "Life")
-        {
-            lifes++;
+        if (col.gameObject.tag == "Life") {
+            lifes += 1;
             Destroy(col.gameObject);
         }
 
@@ -107,6 +121,7 @@ public class gameController : MonoBehaviour {
 
 			if(!temporary.activated) {
 				spawn = temporary.transform.position;
+                spawn.y += spawnCorrection;
 				temporary.activated = true;
 			}
 		}
