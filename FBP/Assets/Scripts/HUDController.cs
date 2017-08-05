@@ -8,8 +8,10 @@ public class HUDController : MonoBehaviour
 {
 	public GUISkin skin;
 	public gameController gameController;
-	public Text coins;
-	public Text lifes;
+	public Text gold;
+    public Text silver;
+    public Text bronze;
+    public Text lifes;
 	
 	bool pause;
 	Rect windowPause, windowWin, windowLoose;
@@ -57,8 +59,10 @@ public class HUDController : MonoBehaviour
 			Time.timeScale = 0;
 		}
 
-        coins.text = gameController.coins.ToString();
-		lifes.text = gameController.lifes.ToString();
+        gold.text = gameController.gold.ToString();
+        silver.text = gameController.silver.ToString();
+        bronze.text = gameController.bronze.ToString();
+        lifes.text = gameController.lifes.ToString();
 	}
 	
 	void OnGUI() {
@@ -97,7 +101,7 @@ public class HUDController : MonoBehaviour
 
 		string message = "";
 
-		playerScore = gameController.coins * gameController.lifes;
+		playerScore = gameController.bronze + gameController.silver * 5 + gameController.gold * 10;
 
 		if (playerScore < 0)
 			message = "Disgusting!!!";

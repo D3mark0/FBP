@@ -15,8 +15,10 @@ public class gameController : MonoBehaviour {
     [HideInInspector] public float move;
     [HideInInspector] public bool jump;
 
-    public int coins = 0;
-	public int lifes = 3;
+    public int gold = 0;
+    public int silver = 0;
+    public int bronze = 0;
+    public int lifes = 3;
 
 	public bool win = false;
     public bool loose = false;
@@ -26,7 +28,6 @@ public class gameController : MonoBehaviour {
 
 	Animator animator;
 	Rigidbody2D body;
-	spawnPointScript temporary;
 	Vector2 spawn;
 
 	void Start() {
@@ -98,26 +99,36 @@ public class gameController : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D col) {
 		
 		if (col.gameObject.tag == "Enemy") {
+
 			Die();
 		}
 		
 		if (col.gameObject.tag == "Win") {
+
 			win = true;
 		}
 
 		if (col.gameObject.tag == "Coin") {
-			coins += 1;
+
+            if (col.gameObject.name == "bronze")
+                bronze++;
+            else if (col.gameObject.name == "silver")
+                silver++;
+            else if (col.gameObject.name == "gold")
+			    gold ++;
+
 			Destroy(col.gameObject);
 		}
 
         if (col.gameObject.tag == "Life") {
-            lifes += 1;
+
+            lifes ++;
             Destroy(col.gameObject);
         }
 
-        if (col.gameObject.name == "spawnPoint") {
-			
-			temporary = col.gameObject.GetComponent<spawnPointScript>();
+        if (col.gameObject.tag == "Spawn") {
+
+            spawnPointScript temporary = col.gameObject.GetComponent<spawnPointScript>();
 
 			if(!temporary.activated) {
 				spawn = temporary.transform.position;
@@ -125,5 +136,11 @@ public class gameController : MonoBehaviour {
 				temporary.activated = true;
 			}
 		}
-	}
+
+        if (col.gameObject.tag == "Spring") {
+
+            body.AddForce(new Vector2(0f, jumpForce * 2));
+        }
+
+    }
 }

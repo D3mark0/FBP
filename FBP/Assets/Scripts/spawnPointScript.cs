@@ -14,6 +14,7 @@ public class spawnPointScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 		animator.SetBool ("Active", activated);
 	}
 	
